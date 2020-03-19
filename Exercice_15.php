@@ -1,31 +1,28 @@
 <?php session_start(); ?>
-
     <html>
-    <h1>TP_n°5_langage_PHP</h1>
-    <hr>
-    <h2>Exercice_15 </h2>
+        <h1>TP_n°5_langage_PHP</h1>
+        <hr>
+        <h2>Exercice_15 </h2>
 
-    <h4>Sasissez les tâches</h4>
+        <h4>Sasissez les tâches</h4>
 
-    <form method="post">
-        Tâche :    <input type="text" name="tache"/><br>
+        <form method="post">
+            Tâche :    <input type="text" name="tache" <?php if (isset($_POST["tache"])){echo $_POST["tache"];} ?>/><br>
 
-        <br><br>
+            <br><br>
 
-        <input type="submit" value="Enregistrer" />&nbsp;<input type="reset" value="Effacer" />
+            <input type="submit" value="Enregistrer" />&nbsp;<input type="reset" value="Effacer" />
 
-        <br><br>
-        ______________
-        <br><br>
-        <input type="submit" value="Supprimer la session" name="supp"/>
-        <br>
-        ______________
+            <br><br>
+            ______________
+            <br><br>
+            <input type="submit" value="Supprimer la session" name="supp"/>
+            <br>
+            ______________
 
-        <br><br>
+            <br><br>
 
-        <input type='submit' name='Actualiser' value='Actualiser' />
-
-    </form>
+        </form>
     </html>
 
 <?php
@@ -48,81 +45,67 @@ if($_POST['tache'] == NULL) {
 }
 else {
 
-    if (isset($_SESSION['tache'])) {
-        array_push($_SESSION['tache'], $_SESSION['compteur'], $_POST['tache'], $_POST['fait']);
+    if (isset($_SESSION['taches'])) {
+        array_push($_SESSION['taches'], $_SESSION['compteur'], $_POST['tache'], $_POST['fait']);
     } else {
-        $_SESSION['tache'] = array();
-        array_push($_SESSION['tache'], $_SESSION['compteur'], $_POST['tache'], $_POST['fait']);
+        $_SESSION['taches'] = array();
+        array_push($_SESSION['taches'], $_SESSION['compteur'], $_POST['tache'], $_POST['fait']);
     }
     echo "<br>";
-    $length = count($_SESSION['tache']);
-    $f = str_replace("\n", " ", $file);
+    $length = count($_SESSION['taches']);
     $length2 = $length / 3;
-    $t = 0;
-    var_dump($_SESSION['tache']);
+
+    var_dump($_SESSION['taches']);
 
     echo "<br><br>";
-
     echo "<table>";
 
     echo "<tr><td>N°  |</td><td> Tâche </td><td>| État </td></tr>";
 
-    for ($k = 0; $k < $length2; $k++) {
+    $j=0;
+    $_SESSION['taches'][$j+2]='checked';
+    $t=0;
+
+    for ($j = 0; $j < $length; $j+=3) {
         echo "<tr>";
-        echo "<td>" . $_SESSION['tache'][$t] . "</td>";
-
-        $w = $_SESSION['tache'][$t + 2];
-
-
-        if ($_SESSION['tache'][$t + 2] == checked) {
-            echo "<td><strike>" . $_SESSION['tache'][$t + 1] . "</strike></td>";
-            echo "<td>" . $_SESSION['tache'][$t + 2] . "<input type='checkbox' name='fait[]' value='checked' $w></td>";
-        } else if ($_SESSION['tache'][$t + 2] == null) {
-            echo "<td>" . $_SESSION['tache'][$t + 1] . "</td>";
-            echo "<td>" . $_SESSION['tache'][$t + 2] . "<input type='checkbox' name='fait[]' value='' ></td>";
-
-        }
-        if ($t + 3 != $length) {
-            $t = $t + 3;
+        echo "<td>" . $_SESSION['taches'][$j] . "</td>";
+        if ($_SESSION['taches'][$j + 2] == 'checked') {
+            echo "<td><strike>" . $_SESSION['taches'][$j + 1] . "</strike></td>";
+            echo "<td>" . $_SESSION['taches'][$j + 2] . "<input type='checkbox' name='fait' value=$t checked></td>";
+            $t++;
+        } else {
+            echo "<td>" . $_SESSION['taches'][$j + 1] . "</td>";
+            echo "<td>" . $_SESSION['taches'][$j + 2] . "<input type='checkbox' name='fait'  value=$t></td>";
+            $t++;
         }
         echo "</tr>";
-    }
-
-    /*$t=0;
-
-    for ($k = 0; $k < $length; $k++) {
-        echo "<tr>";
-        $_SESSION['tache'] = explode(";", $f[$k]);
-            echo "<td>".$ligne_mots[$t]. "</td>";
-            $w=$ligne_mots[$t+2];
-            if ($ligne_mots[$t+2]=checked) {
-                echo "<td><strike>".$ligne_mots[$t+1]. "</strike></td>";
-                echo "<td>" . $ligne_mots[$t + 2] . "<input type='checkbox' name='fait' value=$k $w></td>";
-            }else{
-                echo "<td>".$ligne_mots[$t+1]. "</td>";
-                echo "<td>" . $ligne_mots[$t + 2] . "<input type='checkbox' name='fait' value=$k ></td>";
-
-            }
-        }
-     if ($t+3!=$length) {
-            $t = $t + 3;
-        }
-        echo "</tr>";
-
-    }*/
-    foreach($_POST['fait'] as $value) {
-        echo $value;
     }
     echo "</table>";
+?>
+   <input type='submit' name='Actualiser' value='Actualiser' />
 
-
+ <?php
     if (isset($_POST['Actualiser'])) {
-        for ($m=2;$m<$length;$m+=3){
-            if ($_POST['fait'][$m]=='checked'){
-                $_SESSION['tache'][$m]="checked";
+
+        echo "test";
+
+        for ($m=0;$m<$length2;$m++){
+            if ($_POST['fait']==$m){
+                $_SESSION['taches'][$m]="checked";
             }
         }
-        header('Location: Exercice_15.php');
+        for ($k = 0; $k < $length; $k+=3) {
+            echo "<tr>";
+            echo "<td>" . $_SESSION['taches'][$k] . "</td>";
+            if ($_SESSION['taches'][$k + 2] == 'checked') {
+                echo "<td><strike>" . $_SESSION['taches'][$k + 1] . "</strike></td>";
+                echo "<td>" . $_SESSION['taches'][$k + 2] . "<input type='checkbox' name='fait' ></td>";
+            } else {
+                echo "<td>" . $_SESSION['taches'][$k + 1] . "</td>";
+                echo "<td>" . $_SESSION['taches'][$k + 2] . "<input type='checkbox' name='fait' ></td>";
+            }
+            echo "</tr>";
+        }
     }
 }
 ?>
